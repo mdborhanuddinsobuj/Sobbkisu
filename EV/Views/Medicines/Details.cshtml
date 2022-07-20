@@ -1,0 +1,52 @@
+﻿@model EV.Models.Medicines
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div id="horizontal-card" class="section">
+    <div class="row">
+        <div class="col s12 m10 l10 offset-m1 offset-l1">
+            <div class="card horizontal">
+                <div class="card-image">
+                    <img src="@Url.Action(@Html.DisplayFor(model => model.pImage).ToString(), "Images")" alt="" />
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <h5> @Html.DisplayFor(model => model.pName)</h5>
+                        <p>
+                            Availability:
+                            <span class="green-text">@Html.DisplayFor(model => model.qty) Item Available</span>
+                        </p>
+                        <p>
+                            Status:
+                            @if (Model.pStatus.ToString() == "Active")
+                            {
+                                <span class=" green lighten-5 green-text text-accent-2">Active</span>
+                            }
+                            @if (Model.pStatus.ToString() == "Inactive")
+                            {
+                                <span class=" pink lighten-5 pink-text text-accent-2">Inactive</span>
+                            }
+                        </p>
+                        <ul class="list-bullet" style="padding-left: 15px;">
+                            <li class="list-item-bullet" style="list-style-type:disc">Accept SIM card and call</li>
+                            <li class="list-item-bullet" style="list-style-type:disc">Make calling instead of mobile phone</li>
+                            <li class="list-item-bullet" style="list-style-type:disc">Sync music play and sync control music</li>
+                            <li class="list-item-bullet" style="list-style-type:disc">Sync Facebook,Twiter,emailand calendar</li>
+                        </ul>
+                        <p>
+                            Expire Date:
+                            <span class="red-text">@Model.expiryDate.ToString("MMMM dd, yyyy")</span>
+                        </p>
+                        <h5>Tk. 399</h5>
+                        <p class="mt-2 float-right">
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.pId }, new { @class = "btn btn-small waves-effect waves-light gradient-45deg-amber-amber" })
+                            @Html.ActionLink("Back", "Index", "", new { @class = "btn btn-small waves-effect waves-light gradient-45deg-light-blue-cyan" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

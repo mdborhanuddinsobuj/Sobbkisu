@@ -1,0 +1,80 @@
+﻿@model IEnumerable<EV.ViewModel.MedicineVM>
+
+<div class="card-content pb-1">
+    <h4 class="card-title mb-0">
+        Available Medicine List
+        <a href="@Url.Action("Create", "Medicines")" class="mb-1 btn-floating waves-effect waves-light gradient-45deg-green-teal gradient-shadow float-right">
+            <i class="material-icons" style="line-height:40px">add</i>
+        </a>
+    </h4>
+</div>
+
+<table class="subscription-table responsive-table highlight">
+    <thead>
+        <tr>
+            <th> SL# </th>
+            <th> Image </th>
+            <th> Name </th>
+            <th> Qty </th>
+            <th> Price </th>
+            <th> Total </th>
+            <th> Expire Date</th>
+            <th> Status </th>
+            <th> Category </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Select((x, i) => new { Data = x, Index = i+1 }))
+        {
+        <tr id="tr-@item.Index">
+            <td>
+                @item.Index
+            </td>
+            <td>
+                <img alt="" src="@Url.Action(@Html.DisplayFor(modelItem => item.Data.pImage).ToString(), "Images")" height="40" width="40" class="photo" />
+            </td>
+            <td>
+                @item.Data.pName
+            </td>
+            <td>
+                @item.Data.qty
+            </td>
+            <td>
+                @item.Data.price.ToString("0.0")
+            </td>
+            <td>
+                @item.Data.total.ToString("0.0")
+            </td>
+            <td>
+                @item.Data.expiryDate.ToString("MMMM dd, yyyy")
+            </td>
+            <td>
+                @if (item.Data.pStatus.ToString() == "Active")
+                {
+                    <span class="badge green lighten-5 green-text text-accent-2">Active</span>
+                }
+                @if (item.Data.pStatus.ToString() == "Inactive")
+                {
+                    <span class="badge pink lighten-5 pink-text text-accent-2">Inactive</span>
+                }
+            </td>
+            <td>
+                @item.Data.cName
+            </td>
+            <td class="">
+                <a href="@Url.Action("Edit","Medicines", new { id=item.Data.pId })">
+                    <i class="material-icons pink-text">edit</i>
+                </a>
+                <a href="@Url.Action("Details","Medicines", new { id=item.Data.pId })">
+                    <i class="material-icons pink-text">visibility</i>
+                </a>
+                <a id="btnDelete-@item.Index" class="btnDelete" href="@Url.Action("Delete","Medicines", new { id=item.Data.pId })">
+                    <i class="material-icons pink-text">clear</i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,87 @@
+﻿@model EV.Models.Categories
+
+@{
+    ViewBag.Title = "Create new category";
+}
+@section styles {
+    <style type="text/css">
+        .preloader-wrapper {
+            display:none;
+        }
+    </style>
+}
+    <div class="row">
+        <div class="col s12 m8 l8 offset-m2 offset-l2">
+            <div id="basic-form" class="card card card-default scrollspy">
+                <div class="card-content">
+
+                    <div class="row">
+                        <h4 class="card-title">
+                            Add New Category
+                            <div class="float-right">
+                                <a href="@Url.Action("Index", "Categories")" class="mb-1 btn-floating waves-effect waves-light gradient-45deg-green-teal gradient-shadow float-right">
+                                    <i class="material-icons" style="line-height:40px">arrow_back</i>
+                                </a>
+                            </div>
+                        </h4>
+                    </div>
+                    @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "msg", OnComplete = "clearAll" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <hr class="mt-2 pink border-none" style="height:2px" />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="input-field s12">
+                                @Html.LabelFor(model => model.cName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                @Html.EditorFor(model => model.cName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.cName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+
+                                    <button class="btn btn-default" type="submit" id="btnCreate">
+                                        Create <div class="preloader-wrapper small active" style="display:none" id="progress">
+                                            <div class="spinner-layer spinner-green-only">
+                                                <div class="circle-clipper left">
+                                                    <div class="circle"></div>
+                                                </div><div class="gap-patch">
+                                                    <div class="circle"></div>
+                                                </div><div class="circle-clipper right">
+                                                    <div class="circle"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <span id="msg"></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function clearAll() {
+            $("#form0").trigger("reset");
+        }
+    </script>
+    <script>
+        $("#btnCreate").click(function (e) {
+            e.preventDefault();
+            $(".preloader-wrapper").attr("style", "width: 1.4rem; height: 1.4rem; margin-left: 10px; margin-bottom: -5px;display:inline-block");
+            $("#btnCreate").attr("disabled","disabled")
+            setTimeout(function () {
+                $("#form0").submit();
+                $(".preloader-wrapper").attr("style", "width: 1.4rem; height: 1.4rem; margin-left: 10px; margin-bottom: -5px;display:none")
+                $("#btnCreate").removeAttr("disabled")
+            }, 2000);
+        }); 
+    </script>
+}

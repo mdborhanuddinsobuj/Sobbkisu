@@ -1,0 +1,166 @@
+﻿@model EV.Models.Medicines
+
+@{
+    ViewBag.Title = "Create New Medicine";
+}
+
+<div class="row">
+    <div class="col s12 m8 l8 offset-m2 offset-l2">
+        <div id="basic-form" class="card card card-default scrollspy">
+            <div class="card-content">
+
+                <div class="row">
+                    <h4 class="card-title">
+                        Add New Medicine
+                        <div class="float-right">
+                            <a href="@Url.Action("Index", "Medicines")" class="mb-1 btn-floating waves-effect waves-light gradient-45deg-green-teal gradient-shadow float-right">
+                                <i class="material-icons" style="line-height:40px">arrow_back</i>
+                            </a>
+                        </div>
+                    </h4>
+                </div>
+
+                @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "msg", OnComplete = "clearAll" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="">
+                        <div class="row">
+                            <hr class="mt-2 pink border-none" style="height:2px" />
+                            @Html.ValidationSummary(true, "", new { @class = "pink-text" })
+                            <div class="input-field s12 col">
+                                @Html.LabelFor(model => model.pName, htmlAttributes: new { @class = "" })
+                                @Html.EditorFor(model => model.pName, new { htmlAttributes = new { @class = "" } })
+                                @Html.ValidationMessageFor(model => model.pName, "", new { @class = "pink-text" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field s12 col">
+                                @Html.LabelFor(model => model.qty, htmlAttributes: new { @class = "" })
+                                @Html.EditorFor(model => model.qty, new { htmlAttributes = new { @class = "" } })
+                                @Html.ValidationMessageFor(model => model.qty, "", new { @class = "pink-text" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field s12 col">
+                                @Html.LabelFor(model => model.price, htmlAttributes: new { @class = "" })
+                                @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "" } })
+                                @Html.ValidationMessageFor(model => model.price, "", new { @class = "pink-text" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field s12 col">
+                                @Html.EditorFor(model => model.expiryDate, new { htmlAttributes = new { @class = "datepicker", @id = "exDate", @type = "text" } })
+                                @Html.LabelFor(model => model.expiryDate, htmlAttributes: new { @for = "exDate" })
+                                @Html.ValidationMessageFor(model => model.expiryDate, "", new { @class = "pink-text" })
+                            </div>
+                        </div>
+
+                        <div class="col s12 m8 l8">
+                            <div class="row">
+                                <div class="file-field input-field">
+                                    <div class="btn">
+                                        <span>File</span>
+                                        <input type="file" name="File" id="File">
+                                        @Html.EditorFor(model => model.pImage, new { htmlAttributes = new { @class = "", @style = "display:none", @id = "fileName" } })
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text">
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.pImage, "", new { @class = "pink-text" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field">
+                                    <p>
+                                        <label class="mr-2">
+                                            @Html.RadioButtonFor(model => model.pStatus, "Active", new { @checked = "checked" }) <span>Active</span>
+                                        </label>
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.pStatus, "Inactive") <span>Inactive</span>
+                                        </label>
+                                    </p>
+                                    @Html.ValidationMessageFor(model => model.pStatus, "", new { @class = "pink-text" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s4 m4 l4">
+                            <img class="col m12 l12" id="ImagePreview" src="~/Images/banner.png" height="150" />
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 m8 l8">
+                                @Html.DropDownList("cId", null, "--Select category--")
+                                @Html.ValidationMessageFor(model => model.cId, "", new { @class = "pink-text" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="">
+                                    <button class="btn btn-default" type="submit" id="btnCreate">
+                                        Create <div class="preloader-wrapper small active" style="display:none" id="progress">
+                                            <div class="spinner-layer spinner-green-only">
+                                                <div class="circle-clipper left">
+                                                    <div class="circle"></div>
+                                                </div><div class="gap-patch">
+                                                    <div class="circle"></div>
+                                                </div><div class="circle-clipper right">
+                                                    <div class="circle"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <span id="msg"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function clearAll() {
+            $("#form0").trigger("reset");
+            $("body").scrollTop(0);
+            $("#ImagePreview").attr("src", "/Images/banner.png");
+        }
+        $("#File").change(function () {
+            var file = $("input[type=file]").get(0).files[0];
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function () {
+                    $("#ImagePreview").attr("src", reader.result);
+                    $("#fileName").val(file);
+                }
+                reader.readAsDataURL(file);
+            }
+        })
+        $("#form0").attr("enctype", "multipart/form-data");
+        $(document).ready(function () {
+            $('.datepicker').datepicker();
+        });
+    </script>
+    <script>
+        $("#btnCreate").click(function (e) {
+            e.preventDefault();
+            $(".preloader-wrapper").attr("style", "width: 1.4rem; height: 1.4rem; margin-left: 10px; margin-bottom: -5px;display:inline-block");
+            $("#btnCreate").attr("disabled", "disabled")
+            setTimeout(function () {
+                $("#form0").submit();
+                $(".preloader-wrapper").attr("style", "width: 1.4rem; height: 1.4rem; margin-left: 10px; margin-bottom: -5px;display:none")
+                $("#btnCreate").removeAttr("disabled")
+            }, 2000);
+        });
+    </script>
+}
+
